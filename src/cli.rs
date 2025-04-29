@@ -30,6 +30,7 @@ pub enum Subs {
             long,
             value_name = "mode",
             help = "The mode of how file is copied",
+            value_parser = ["overwrite", "incr"],
             default_value = "overwrite"
         )]
         mode: String,
@@ -38,7 +39,9 @@ pub enum Subs {
             short,
             long,
             value_name = "replica count",
-            help = "How many times to copy the file"
+            help = "How many times to copy the file",
+            required_if_eq("mode", "incr"),
+            default_value_t = 1
         )]
         replica: u8,
 
@@ -46,18 +49,11 @@ pub enum Subs {
             short,
             long,
             value_name = "starting number",
-            help = "Starting number appending to the end of file name"
+            help = "Starting number appending to the end of file name",
+            required_if_eq("mode", "incr"),
+            default_value_t = 1
         )]
         from: u8,
-
-        #[arg(
-            short,
-            long,
-            value_name = "suffix length",
-            help = "Length of suffix to be appended to the file name",
-            default_value = "1"
-        )]
-        length: u8,
     },
 
     #[command(name = "csv", about = "Show csv or convert a file to other formats")]

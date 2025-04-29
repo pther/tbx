@@ -12,10 +12,9 @@ fn main() -> anyhow::Result<()> {
             target,
             mode,
             from,
-            length,
             replica,
         } => {
-            copy_file(&source, &target, &mode, from, length, replica)?;
+            copy_file(&source, &target, &mode, from, replica)?;
         }
         Subs::Csv(options) => {
             process_csv(&options.input, &options.output)?;
