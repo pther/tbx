@@ -61,7 +61,7 @@ pub fn copy_file(
     } else {
         fs::create_dir_all(target_path)?;
         file_base = source_path.file_stem().unwrap();
-        file_extension = source_path.extension().unwrap();
+        file_extension = source_path.extension().unwrap_or(OsStr::new(""));
     }
 
     let file_base = file_base.to_string_lossy().into_owned();
