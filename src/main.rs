@@ -1,7 +1,7 @@
 #![allow(unused)]
 
 use clap::{arg, command, Parser, Subcommand};
-use tbx::{copy_file, process_csv, Cli, Subs};
+use tbx::{copy_file, process_csv, Cli, OutputFormat, Subs};
 
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
@@ -17,7 +17,13 @@ fn main() -> anyhow::Result<()> {
             copy_file(&source, &target, &mode, from, replica)?;
         }
         Subs::Csv(options) => {
-            process_csv(&options.input, &options.output)?;
+            let output = if let Some(output) = options.output {
+                output
+            } else {
+                // If no output is provided, use the input file name with the new format
+                format!("output.{}", options.format)
+            };
+            process_csv(&options.input, &output, options.format)?;
         }
     }
 

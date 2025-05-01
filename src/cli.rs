@@ -1,4 +1,5 @@
-use std::path::Path;
+use core::fmt;
+use std::{path::Path, str::FromStr};
 
 use clap::{Parser, Subcommand};
 
@@ -56,23 +57,30 @@ pub enum Subs {
         from: u8,
     },
 
-    #[command(name = "csv", about = "Show csv or convert a file to other formats")]
+    #[command(
+        name = "csv",
+        about = "Show csv file content or convert a csv file to other formats"
+    )]
     Csv(CsvOptions),
 }
 
 #[derive(Parser, Debug)]
 pub struct CsvOptions {
-    #[arg(short, long, value_name = "input", help = "Input file to be converted", value_parser = verify_file_exists)]
+    #[arg(short, long, value_name = "input", help = "Input file to be read or converted", value_parser = verify_file_exists)]
     pub input: String,
+
+    #[arg(short, long, value_name = "output", help = "Output file to convert to")]
+    pub output: Option<String>,
 
     #[arg(
         short,
         long,
-        value_name = "output",
-        help = "Output file to convert to",
-        default_value = "output.json"
+        value_name = "format",
+        help = "Output format",
+        value_parser = parse_format,
+        default_value = "json"
     )]
-    pub output: String,
+    pub format: OutputFormat,
 
     #[arg(
         short,
@@ -92,10 +100,47 @@ pub struct CsvOptions {
     pub header: bool,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub enum OutputFormat {
+    Json,
+    Yaml,
+}
+
+impl From<OutputFormat> for &'static str {
+    fn from(format: OutputFormat) -> Self {
+        match format {
+            OutputFormat::Json => "json",
+            OutputFormat::Yaml => "yaml",
+        }
+    }
+}
+
+impl FromStr for OutputFormat {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "json" => Ok(OutputFormat::Json),
+            "yaml" => Ok(OutputFormat::Yaml),
+            _ => Err(anyhow::anyhow!("Unsupported output format")),
+        }
+    }
+}
+
+impl fmt::Display for OutputFormat {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", Into::<&str>::into(*self))
+    }
+}
+
 pub fn verify_file_exists(filename: &str) -> Result<String, &'static str> {
     if Path::new(filename).exists() {
         Ok(filename.to_string())
     } else {
         Err("File does not exist")
     }
+}
+
+pub fn parse_format(s: &str) -> Result<OutputFormat, anyhow::Error> {
+    s.parse()
 }
