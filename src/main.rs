@@ -1,7 +1,5 @@
-#![allow(unused)]
-
-use clap::{arg, command, Parser, Subcommand};
-use tbx::{copy_file, process_csv, Cli, OutputFormat, Subs};
+use clap::Parser;
+use tbx::{copy_file, generate_random_password, process_csv, Cli, Subs};
 
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
@@ -24,6 +22,16 @@ fn main() -> anyhow::Result<()> {
                 format!("output.{}", options.format)
             };
             process_csv(&options.input, &output, options.format)?;
+        }
+        Subs::RandPwd(options) => {
+            let password = generate_random_password(
+                options.length,
+                options.uppercase,
+                options.lowercase,
+                options.number,
+                options.symbol,
+            )?;
+            println!("Generated password: {}", password);
         }
     }
 
