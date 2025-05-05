@@ -5,14 +5,14 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.cmd {
-        Subs::Copy {
-            source,
-            target,
-            mode,
-            from,
-            replica,
-        } => {
-            copy_file(&source, &target, &mode, from, replica)?;
+        Subs::Copy(options) => {
+            copy_file(
+                &options.source,
+                &options.target,
+                &options.mode,
+                options.from,
+                options.replica,
+            )?;
         }
         Subs::Csv(options) => {
             let output = if let Some(output) = options.output {
