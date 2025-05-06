@@ -33,6 +33,9 @@ fn main() -> anyhow::Result<()> {
             )?;
             println!("Generated password: {}", password);
         }
+        Subs::Base64(mode) => {
+            println!("Base64 mode: {:?}", mode);
+        }
     }
 
     Ok(())

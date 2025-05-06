@@ -1,11 +1,13 @@
-pub mod convert_csv;
-pub mod copy;
-pub mod rand_pwd;
+mod base64;
+mod convert_csv;
+mod copy;
+mod rand_pwd;
 
 use std::path::Path;
 
 use clap::{Parser, Subcommand};
 
+pub use base64::Base64Mode;
 pub use convert_csv::{CsvOptions, OutputFormat};
 pub use copy::CopyOptions;
 pub use rand_pwd::RandPwdOptions;
@@ -31,6 +33,9 @@ pub enum Subs {
 
     #[command(name = "randpwd", about = "Generate random password")]
     RandPwd(RandPwdOptions),
+
+    #[command(subcommand)]
+    Base64(Base64Mode),
 }
 
 pub fn verify_file_exists(filename: &str) -> Result<String, &'static str> {
