@@ -1,5 +1,5 @@
-use clap::Parser;
 use super::verify_file_exists;
+use clap::Parser;
 
 #[derive(Parser, Debug)]
 pub enum Base64Mode {
