@@ -51,7 +51,7 @@ mod tests {
 
     #[test]
     fn test_verify_file_exists() {
-        assert_eq!(verify_file_exists("-"), Ok(("-".into())));
+        assert_eq!(verify_file_exists("-"), Ok("-".into()));
         assert_eq!(verify_file_exists("Cargo.toml"), Ok(("Cargo.toml".into())));
         assert_eq!(verify_file_exists("non-exist"), Err("File does not exist"));
     }
