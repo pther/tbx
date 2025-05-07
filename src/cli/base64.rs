@@ -1,4 +1,5 @@
 use clap::Parser;
+use super::verify_file_exists;
 
 #[derive(Parser, Debug)]
 pub enum Base64Mode {
@@ -11,12 +12,12 @@ pub enum Base64Mode {
 
 #[derive(Parser, Debug)]
 pub struct Base64EncodeOptions {
-    /// The string to encode
+    #[arg(short, long, value_parser = verify_file_exists, default_value = "-")]
     pub input: String,
 }
 
 #[derive(Parser, Debug)]
 pub struct Base64DecodeOptions {
-    /// The base64 string to decode
+    #[arg(short, long, value_parser = verify_file_exists, default_value = "-")]
     pub input: String,
 }

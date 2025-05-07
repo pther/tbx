@@ -3,9 +3,8 @@ mod convert_csv;
 mod copy;
 mod rand_pwd;
 
-use std::path::Path;
-
 use clap::{Parser, Subcommand};
+use std::path::Path;
 
 pub use base64::Base64Mode;
 pub use convert_csv::{CsvOptions, OutputFormat};
@@ -39,9 +38,21 @@ pub enum Subs {
 }
 
 pub fn verify_file_exists(filename: &str) -> Result<String, &'static str> {
-    if Path::new(filename).exists() {
+    if filename == "-" || Path::new(filename).exists() {
         Ok(filename.to_string())
     } else {
         Err("File does not exist")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_verify_file_exists() {
+        assert_eq!(verify_file_exists("-"), Ok(("-".into())));
+        assert_eq!(verify_file_exists("Cargo.toml"), Ok(("Cargo.toml".into())));
+        assert_eq!(verify_file_exists("non-exist"), Err("File does not exist"));
     }
 }
