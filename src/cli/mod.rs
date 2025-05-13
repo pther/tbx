@@ -6,7 +6,7 @@ mod rand_pwd;
 use clap::{Parser, Subcommand};
 use std::path::Path;
 
-pub use base64::Base64Mode;
+pub use base64::{Base64Engine, Base64Mode};
 pub use convert_csv::{CsvOptions, OutputFormat};
 pub use copy::CopyOptions;
 pub use rand_pwd::RandPwdOptions;

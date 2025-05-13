@@ -1,5 +1,8 @@
 use clap::Parser;
-use tbx::{copy_file, generate_random_password, process_csv, Cli, Subs};
+use tbx::{
+    copy_file, generate_random_password, process_csv, process_decode, process_encode, Base64Mode,
+    Cli, Subs,
+};
 
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
@@ -33,9 +36,14 @@ fn main() -> anyhow::Result<()> {
             )?;
             println!("Generated password: {}", password);
         }
-        Subs::Base64(mode) => {
-            println!("Base64 mode: {:?}", mode);
-        }
+        Subs::Base64(mode) => match mode {
+            Base64Mode::Encode(options) => {
+                process_encode(&options.input, options.engine)?;
+            }
+            Base64Mode::Decode(options) => {
+                process_decode(&options.input, options.engine)?;
+            }
+        },
     }
 
     Ok(())
