@@ -39,7 +39,7 @@ pub enum Subs {
 
 pub fn verify_file_exists(filename: &str) -> Result<String, &'static str> {
     if filename == "-" || Path::new(filename).exists() {
-        Ok(filename.to_string())
+        Ok(filename.into())
     } else {
         Err("File does not exist")
     }

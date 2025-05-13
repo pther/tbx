@@ -17,7 +17,7 @@ pub struct Base64EncodeOptions {
     #[arg(short, long, value_parser = verify_file_exists, default_value = "-")]
     pub input: String,
 
-    #[arg(long, value_parser = parse_base64_engine, default_value = "Standard")]
+    #[arg(long, value_parser = parse_base64_engine, default_value = "standard")]
     pub engine: Base64Engine,
 }
 
@@ -26,7 +26,7 @@ pub struct Base64DecodeOptions {
     #[arg(short, long, value_parser = verify_file_exists, default_value = "-")]
     pub input: String,
 
-    #[arg(long, value_parser = parse_base64_engine, default_value = "Standard")]
+    #[arg(long, value_parser = parse_base64_engine, default_value = "standard")]
     pub engine: Base64Engine,
 }
 
@@ -54,18 +54,15 @@ impl FromStr for Base64Engine {
 
 impl fmt::Display for Base64Engine {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Base64Engine::Standard => write!(f, "Standard"),
-            Base64Engine::UrlSafe => write!(f, "UrlSafe"),
-        }
+        write!(f, "{}", Into::<&str>::into(*self))
     }
 }
 
 impl From<Base64Engine> for &'static str {
     fn from(engine: Base64Engine) -> Self {
         match engine {
-            Base64Engine::Standard => "Standard",
-            Base64Engine::UrlSafe => "UrlSafe",
+            Base64Engine::Standard => "standard",
+            Base64Engine::UrlSafe => "urlsafe",
         }
     }
 }

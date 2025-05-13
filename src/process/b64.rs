@@ -16,11 +16,11 @@ pub fn process_encode(input: &str, engine: Base64Engine) -> anyhow::Result<()> {
     let mut buf = Vec::new();
     reader.read_to_end(&mut buf)?;
 
-    let encode = match engine {
+    let encoded_str = match engine {
         Base64Engine::Standard => STANDARD.encode(&buf),
         Base64Engine::UrlSafe => URL_SAFE.encode(&buf),
     };
-    println!("Encoded: {}", encode);
+    println!("Encoded: {}", encoded_str);
     Ok(())
 }
 
@@ -34,12 +34,12 @@ pub fn process_decode(input: &str, engine: Base64Engine) -> anyhow::Result<()> {
     let mut buf = Vec::new();
     reader.read_to_end(&mut buf)?;
 
-    let decode = match engine {
+    let decoded = match engine {
         Base64Engine::Standard => STANDARD.decode(&buf)?,
         Base64Engine::UrlSafe => URL_SAFE.decode(&buf)?,
     };
 
-    let decode = String::from_utf8(decode)?;
-    println!("Decoded: {}", decode);
+    let decoded_str = String::from_utf8(decoded)?;
+    println!("Decoded: {}", decoded_str);
     Ok(())
 }
